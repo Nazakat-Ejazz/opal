@@ -27,24 +27,23 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <ThemeProvider
-        attribute={'class'}
-        defaultTheme={'system'}
-        enableSystem
-        disableTransitionOnChange
-      >
-        <html lang='en'>
-          <body className={`${manrope.className} bg-[#171717]`}>
-            <SignedOut>
+      <html lang='en'>
+        <body className={`${manrope.className} bg-[#171717]`}>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='dark'
+            disableTransitionOnChange
+          >
+            {/* <SignedOut>
               <SignInButton />
             </SignedOut>
             <SignedIn>
               <UserButton />
-            </SignedIn>
+            </SignedIn> */}
             {children}
-          </body>
-        </html>
-      </ThemeProvider>
+          </ThemeProvider>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
