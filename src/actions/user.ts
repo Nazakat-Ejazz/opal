@@ -1,6 +1,7 @@
 'use server';
 
 import { currentUser } from '@clerk/nextjs/server';
+import { client } from '@/lib/prisma';
 
 export const onAuthenticateUser = async () => {
   try {
@@ -9,10 +10,10 @@ export const onAuthenticateUser = async () => {
       return { status: 403 };
     }
 
-    // const existingUser = await db.user.findUnique({
-    //     where:{
-    //         clerkId:user._id,
-    //     }
-    // })
+    const existingUser = await client.user.findUnique({
+      where: {
+        clerkId: user?._id,
+      },
+    });
   } catch (error) {}
 };
