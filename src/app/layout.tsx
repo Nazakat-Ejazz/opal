@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import {
   ClerkProvider,
   SignInButton,
@@ -6,12 +7,11 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 
-import { Manrope } from 'next/font/google';
-import type { Metadata } from 'next';
+import { Manrope, DM_Sans } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme';
 
-const manrope = Manrope({
+const manrope = DM_Sans({
   subsets: ['latin'],
 });
 
@@ -31,15 +31,16 @@ export default function RootLayout({
         <body className={`${manrope.className} bg-[#171717]`}>
           <ThemeProvider
             attribute='class'
-            defaultTheme='dark'
+            defaultTheme='system'
+            enableSystem
             disableTransitionOnChange
           >
-            {/* <SignedOut>
+            <SignedOut>
               <SignInButton />
             </SignedOut>
             <SignedIn>
               <UserButton />
-            </SignedIn> */}
+            </SignedIn>
             {children}
           </ThemeProvider>
         </body>
