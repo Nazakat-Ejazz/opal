@@ -2,6 +2,7 @@
 
 import { currentUser } from '@clerk/nextjs/server';
 import { client } from '@/lib/prisma';
+import { useReducer } from 'react';
 
 export const onAuthenticateUser = async () => {
   try {
@@ -74,5 +75,109 @@ export const onAuthenticateUser = async () => {
     return { status: 400 };
   } catch (error) {
     return { status: 500 };
+  }
+};
+
+export const getgetAllUserWorkspaces = async () => {
+  try {
+    const user = await currentUser(); // this method from clerk will provide us currenlty logged in user.
+
+    // if no user return unAuthorized
+    if (!user) {
+      return {
+        status: 403,
+      };
+    }
+
+    // if no user redirect to login page
+    const userWorkspaces = await client.user.findUnique({
+      where: {
+        clerkId: user?.id,
+      },
+      select: {
+        subscription: {
+          select: {
+            plan: true,
+          },
+        },
+        workSpace: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+          },
+        },
+        memebers: {
+          select: {
+            WorkSpace: {
+              select: {
+                id: true,
+                name: true,
+                type: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (userWorkspaces) {
+      return {
+        status: 200,
+        userWorkspaces,
+      };
+    }
+  } catch (error) {
+    return {
+      status: 500,
+    };
+  }
+};
+
+export const getAllUserNotifications = async () => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return {
+        status: 403,
+      };
+    }
+
+    const userNotifications = await client.user.findUnique({
+      where: {
+        clerkId: user.id,
+      },
+      select: {
+        notification: true,
+        _count: {
+          select: {
+            notification: true,
+          },
+        },
+      },
+    });
+
+    if (!userNotifications) {
+      return {
+        status: 200,
+        data: {
+          userNotifications: [],
+        },
+      };
+    }
+
+    if (userNotifications) {
+      return {
+        status: 200,
+        data: {
+          userNotifications,
+        },
+      };
+    }
+  } catch (error) {
+    return {
+      status: 500,
+    };
   }
 };
