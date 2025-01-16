@@ -10,6 +10,7 @@ import {
 import { Manrope, DM_Sans } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme';
+import ReactQueryProvider from '@/react-query';
 
 const manrope = DM_Sans({
   subsets: ['latin'],
@@ -35,13 +36,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-            {children}
+            <ReactQueryProvider>{children}</ReactQueryProvider>
           </ThemeProvider>
         </body>
       </html>
