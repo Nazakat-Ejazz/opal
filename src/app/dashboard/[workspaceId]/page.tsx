@@ -3,7 +3,8 @@ import React from 'react';
 type Props = {};
 
 const WorkspacePage = (props: Props) => {
-  return <div>page</div>;
+  console.log('Single workspace page!');
+  return <div>Single Workspace page!</div>;
 };
 
 export default WorkspacePage;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { onAuthenticateUser } from '@/actions/user';
 import { redirect } from 'next/navigation';
 
@@ -15,7 +14,6 @@ const DashboardPage = async (props: Props) => {
   if (auth.status === 400 || auth.status === 404 || auth.status === 500) {
     return redirect(`/auth/sign-in`);
   }
-  return <div>dashboard page</div>;
 };
 
 export default DashboardPage;

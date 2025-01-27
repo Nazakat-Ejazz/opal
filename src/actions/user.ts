@@ -2,12 +2,11 @@
 
 import { currentUser } from '@clerk/nextjs/server';
 import { client } from '@/lib/prisma';
-import { useReducer } from 'react';
 
 export const onAuthenticateUser = async () => {
+  console.log('From inside onAuthenticateUser!');
   try {
     const user = await currentUser();
-    console.log('From clerk: currentUser : ', currentUser);
     if (!user) {
       return { status: 403 };
     }
@@ -26,11 +25,14 @@ export const onAuthenticateUser = async () => {
         },
       },
     });
+
+    console.log('userExists : ', userExists);
     // user already exists return it
     if (userExists) {
       return { status: 200, user: userExists };
     }
     // else case create user
+    console.log('Have to create new user!');
     const newUser = await client.user.create({
       data: {
         clerkId: user.id,
@@ -74,6 +76,7 @@ export const onAuthenticateUser = async () => {
     }
     return { status: 400 };
   } catch (error) {
+    console.log('🔴 ERROR', error);
     return { status: 500 };
   }
 };
