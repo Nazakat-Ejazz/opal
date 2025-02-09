@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   getAllUserNotifications,
-  getgetAllUserWorkspaces,
+  getAllUserWorkspaces,
   onAuthenticateUser,
 } from '@/actions/user';
 import { redirect } from 'next/navigation';
@@ -47,7 +47,7 @@ const Layout = async ({ params: { workspaceId }, children }: Props) => {
   // to get all the workspaces of a user.
   await query.prefetchQuery({
     queryKey: ['user-workspaces'],
-    queryFn: () => getgetAllUserWorkspaces(),
+    queryFn: () => getAllUserWorkspaces(),
   });
 
   // to fetch all the videos of a user, not supplying user's id because we will get it from the authenticted user i.e from currentUser();

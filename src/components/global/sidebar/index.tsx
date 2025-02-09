@@ -5,12 +5,16 @@ import {
   Select,
   SelectContent,
   SelectGroup,
+  SelectItem,
   SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { useRouter } from 'next/navigation';
+import { userQueryData } from '@/hooks/userQueryData';
+import { getAllUserWorkspaces } from '@/actions/user';
+import { WorkspaceProps } from '@/types/index.types';
 
 type Props = {
   activeWorkspaceId: string;
@@ -18,6 +22,19 @@ type Props = {
 
 const Sidebar = ({ activeWorkspaceId }: Props) => {
   const router = useRouter();
+
+  // data fetching
+  const { data, isFetched } = userQueryData(
+    ['user-workspaces'],
+    getAllUserWorkspaces
+  );
+
+  console.log('data --', data);
+
+  // const { data: workspaces } = data as WorkspaceProps;
+  const { userWorkspaces: workspaces } = data as WorkspaceProps;
+
+  console.log('oww ', workspaces);
 
   // method to handle workspace change
   const handleWorkSpaceChanger = (val: string) => {
@@ -45,10 +62,15 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
           <SelectTrigger className='mt-16 text-neutral-400 bg-transparent'>
             <SelectValue>Switch Workspace</SelectValue>
           </SelectTrigger>
-          <SelectContent className='bg-blur-xl bg-[#111111] bg-slate-500'>
+          <SelectContent className='bg-blur-xl bg-[#111111] text-neutral-50'>
             <SelectGroup>
               <SelectLabel>Workspaces</SelectLabel>
-              <Separator />
+              <Separator className='my-2' />
+              {workspaces.workSpace.map((ws) => (
+                <SelectItem id={ws.id} value={ws.id}>
+                  {ws.name}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>

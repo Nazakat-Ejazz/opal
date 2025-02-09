@@ -81,7 +81,8 @@ export const onAuthenticateUser = async () => {
   }
 };
 
-export const getgetAllUserWorkspaces = async () => {
+export const getAllUserWorkspaces = async () => {
+  console.log('Inside getAllUserWorkspaces action!');
   try {
     const user = await currentUser(); // this method from clerk will provide us currenlty logged in user.
 
