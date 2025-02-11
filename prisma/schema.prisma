@@ -24,7 +24,7 @@ model User {
   workSpace    WorkSpace[]
   videos       Video[]
   subscription Subscription?
-  memebers     Member[]
+  members     Member[]
   notification Notification[]
   sender       Invite[]        @relation("sender")
   receiver     Invite[]        @relation("reciever")
@@ -97,7 +97,7 @@ model Member {
   User        User?      @relation(fields: [userId], references: [id])
   userId      String?    @db.Uuid
   createdAt   DateTime   @default(now())
-  memeber     Boolean    @default(true)
+  member     Boolean    @default(true)
   WorkSpace   WorkSpace? @relation(fields: [workSpaceId], references: [id])
   workSpaceId String?    @db.Uuid
 }

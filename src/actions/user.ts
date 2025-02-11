@@ -111,7 +111,7 @@ export const getAllUserWorkspaces = async () => {
             type: true,
           },
         },
-        memebers: {
+        members: {
           select: {
             WorkSpace: {
               select: {

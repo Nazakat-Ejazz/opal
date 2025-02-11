@@ -67,10 +67,17 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
               <SelectLabel>Workspaces</SelectLabel>
               <Separator className='my-2' />
               {workspaces.workSpace.map((ws) => (
-                <SelectItem id={ws.id} value={ws.id}>
+                <SelectItem key={ws.id} value={ws.id}>
                   {ws.name}
                 </SelectItem>
               ))}
+
+              {workspaces.members &&
+                workspaces.members.map((ws) => (
+                  <SelectItem value={ws.Workspace.id} key={ws.Workspace.id}>
+                    {ws.Workspace.name}
+                  </SelectItem>
+                ))}
             </SelectGroup>
           </SelectContent>
         </Select>
