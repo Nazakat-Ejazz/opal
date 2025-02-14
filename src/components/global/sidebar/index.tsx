@@ -30,14 +30,12 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
   );
 
   console.log('data --', data);
-
-  // const { data: workspaces } = data as WorkspaceProps;
   const { userWorkspaces: workspaces } = data as WorkspaceProps;
 
   console.log('oww ', workspaces);
 
   // method to handle workspace change
-  const handleWorkSpaceChanger = (val: string) => {
+  const handleWorkSpaceChange = (val: string) => {
     router.push(`/workspace/${val}`);
   };
 
@@ -57,10 +55,10 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
         {/* workspace select dropdown */}
         <Select
           defaultValue={activeWorkspaceId}
-          onValueChange={handleWorkSpaceChanger}
+          onValueChange={handleWorkSpaceChange}
         >
           <SelectTrigger className='mt-16 text-neutral-400 bg-transparent'>
-            <SelectValue>Switch Workspace</SelectValue>
+            <SelectValue placeholder='Switch Workspace!'></SelectValue>
           </SelectTrigger>
           <SelectContent className='bg-blur-xl bg-[#111111] text-neutral-50'>
             <SelectGroup>
