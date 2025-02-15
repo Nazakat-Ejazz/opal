@@ -185,3 +185,46 @@ export const getAllUserNotifications = async () => {
     };
   }
 };
+
+export const searchWorkspace = async (query: string) => {
+  try {
+    const user = await currentUser();
+
+    if (!user) {
+      return { status: 404 };
+    }
+
+    const workspace = await client.user.findMany({
+      where: {
+        OR: [
+          { firstname: { contains: query } },
+          { email: { contains: query } },
+          { lastname: { contains: query } },
+        ],
+        NOT: [{ clerkId: user.id }],
+      },
+      select: {
+        id: true,
+        subscription: {
+          select: {
+            plan: true,
+          },
+        },
+        firstname: true,
+        lastname: true,
+        email: true,
+      },
+    });
+
+    if (workspace && workspace.length) {
+      return {
+        status: 200,
+        data: workspace,
+      };
+    }
+
+    return { status: 404, data: null };
+  } catch (error) {
+    return { status: 505, data: null };
+  }
+};
