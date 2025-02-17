@@ -17,6 +17,7 @@ import { getAllUserWorkspaces } from '@/actions/user';
 import { WorkspaceProps } from '@/types/index.types';
 import Modal from '../modal';
 import { PlusCircleIcon } from 'lucide-react';
+import Search from '../search';
 
 type Props = {
   activeWorkspaceId: string;
@@ -94,7 +95,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
         description={'Invite the people, you want to collaborate with'}
       >
         {/* TODO: Workspace Search Component */}
-        Search Workspace
+        <Search workspaceId={activeWorkspaceId} />
       </Modal>
     </div>
   );
