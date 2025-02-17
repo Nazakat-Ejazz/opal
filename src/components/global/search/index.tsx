@@ -7,6 +7,7 @@ import { useMutationData } from '@/hooks/useMutationData';
 import { AvatarFallback } from '@radix-ui/react-avatar';
 import { User } from 'lucide-react';
 import React from 'react';
+import Loader from '../loader';
 
 type Props = {
   workspaceId: string;
@@ -31,7 +32,7 @@ const Search = ({ workspaceId }: Props) => {
         onChange={onSearchQuery}
         value={query}
         className='bg-transparent border-2 outline-none'
-        placeholder='Search for your user...'
+        placeholder='type to search users...'
         type='text'
       />
       {isFetching ? (
@@ -42,7 +43,17 @@ const Search = ({ workspaceId }: Props) => {
         <p className='text-center text-sm text-[#a4a4a4]'>No Users Found</p>
       ) : (
         <div>
-          {onUsers.map((usr) => (
+          {[
+            {
+              id: 'abcd',
+              firstname: 'Jace',
+              lastname: 'Hayes',
+              image: 'adsfafaasdf',
+              subscription: {
+                plan: 'FREE',
+              },
+            },
+          ].map((usr) => (
             <div
               key={usr.id}
               className='flex gap-x-3 items-center border-2 w-full p-3 rounded-xl'
@@ -68,7 +79,11 @@ const Search = ({ workspaceId }: Props) => {
                   onClick={() => {}}
                   variant={'default'}
                   className='w-5/12 font-bold'
-                ></Button>
+                >
+                  <Loader state color='#000'>
+                    Invite
+                  </Loader>
+                </Button>
               </div>
             </div>
           ))}

@@ -11,13 +11,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useQueryData } from '@/hooks/useQueryData';
 import { getAllUserWorkspaces } from '@/actions/user';
 import { WorkspaceProps } from '@/types/index.types';
 import Modal from '../modal';
 import { PlusCircleIcon } from 'lucide-react';
 import Search from '../search';
+import { MENU_ITEMS } from '@/constants';
+import SidebarItems from './SidebarItem';
 
 type Props = {
   activeWorkspaceId: string;
@@ -35,12 +37,18 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
   console.log('data --', data);
   const { userWorkspaces: workspaces } = data as WorkspaceProps;
 
-  console.log('oww ', workspaces);
+  const currentWorkspace = workspaces.workSpace.find(
+    (ws) => ws.id === activeWorkspaceId
+  );
+
+  const menuItems = MENU_ITEMS(currentWorkspace?.id as string);
 
   // method to handle workspace change
   const handleWorkSpaceChange = (val: string) => {
     router.push(`/workspace/${val}`);
   };
+
+  const pathname = usePathname();
 
   return (
     <div className='bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col items-center gap-4 text-white overflow-hidden'>
@@ -77,26 +85,44 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
         </SelectContent>
       </Select>
 
-      {/* Modal */}
-      <Modal
-        className=''
-        trigger={
-          <span className='text-sm flex items-center justify-center cursor-pointer bg-neutral-800/90 hover:bg-neutral-800/70 w-full rounded-sm gap-[5px] px-4 py-2'>
-            <PlusCircleIcon
-              className='text-neutral-800/90 fill-neutral-500'
-              size={16}
+      {/* if currently selected workspace in public and user has a paid subscription only then show invite other members button to the user */}
+      {currentWorkspace?.type === 'PUBLIC' &&
+        workspaces.subscription?.plan === 'PRO' && (
+          <Modal
+            className=''
+            trigger={
+              <span className='text-sm flex items-center justify-center cursor-pointer bg-neutral-800/90 hover:bg-neutral-800/70 w-full rounded-sm gap-[5px] px-4 py-2'>
+                <PlusCircleIcon
+                  className='text-neutral-800/90 fill-neutral-500'
+                  size={16}
+                />
+                <span className='text-neutral-400 text-sm font-semibold'>
+                  Invite Members
+                </span>
+              </span>
+            }
+            title={'Invite your team members!'}
+            description={'Invite the people, you want to collaborate with'}
+          >
+            <Search workspaceId={activeWorkspaceId} />
+          </Modal>
+        )}
+
+      <p className='w-full text-[#9D9D9D] font-bold mt-4'>Menu</p>
+      <nav className='w-full'>
+        <ul>
+          {menuItems.map((it, index) => (
+            <SidebarItems
+              href={it.href}
+              icon={it.icon}
+              selected={pathname === it.href}
+              title={it.title}
+              key={index}
+              notifications={[]} // 3:37:10
             />
-            <span className='text-neutral-400 text-sm font-semibold'>
-              Invite Members
-            </span>
-          </span>
-        }
-        title={'Invite your team members!'}
-        description={'Invite the people, you want to collaborate with'}
-      >
-        {/* TODO: Workspace Search Component */}
-        <Search workspaceId={activeWorkspaceId} />
-      </Modal>
+          ))}
+        </ul>
+      </nav>
     </div>
   );
 };
