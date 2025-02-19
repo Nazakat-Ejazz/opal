@@ -23,10 +23,10 @@ const SidebarItems = ({
         href={href}
         className={cn(
           'flex items-center justify-between group rounded-lg hover:bg-[#1D1D1D]',
-          selected ? 'text-[#1D1D1D]' : ''
+          selected ? 'text-[#1D1D1D] bg-[#1D1D1D]' : ''
         )}
       >
-        <div className='flex items-center gap-2 transition-all p-[5px] cursor-pointer'>
+        <div className={cn('flex items-center gap-2 transition-all p-[5px] cursor-pointer ${selected} hover:text-[text-[#9D9D9D]', selected ? 'text-[#9D9D9D]' : 'text-[#545454]')}>
           {icon}
           <span
             className={cn(
@@ -42,3 +42,5 @@ const SidebarItems = ({
     </li>
   );
 };
+
+export default SidebarItems;

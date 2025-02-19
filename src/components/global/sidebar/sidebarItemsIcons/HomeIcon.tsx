@@ -1,5 +1,5 @@
 import { Home } from 'lucide-react';
 
-const HomeIcon = () => <Home size={24} />;
+const HomeIcon = () => <Home size={20} />;
 
 export default HomeIcon;

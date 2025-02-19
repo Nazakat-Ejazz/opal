@@ -1,5 +1,5 @@
 import { Bell } from 'lucide-react';
 
-const NotificationsIcon = () => <Bell size={24} />;
+const NotificationsIcon = () => <Bell size={20} />;
 
 export default NotificationsIcon;

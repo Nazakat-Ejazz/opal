@@ -1,3 +1,4 @@
+import NotificationsIcon from '@/components/global/sidebar/sidebarItemsIcons/NotificationsIcon';
 export type WorkspaceProps = {
   status: number;
   userWorkspaces: {
@@ -20,3 +21,13 @@ export type WorkspaceProps = {
     }[];
   };
 };
+
+
+export type NotificationProps = {
+  status: number;
+  data:{
+    _count:{
+      notifications:number;
+    }
+  }
+}

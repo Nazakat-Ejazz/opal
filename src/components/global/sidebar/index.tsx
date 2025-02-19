@@ -13,8 +13,8 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { usePathname, useRouter } from 'next/navigation';
 import { useQueryData } from '@/hooks/useQueryData';
-import { getAllUserWorkspaces } from '@/actions/user';
-import { WorkspaceProps } from '@/types/index.types';
+import { getAllUserNotifications, getAllUserWorkspaces } from '@/actions/user';
+import { NotificationProps, WorkspaceProps } from '@/types/index.types';
 import Modal from '../modal';
 import { PlusCircleIcon } from 'lucide-react';
 import Search from '../search';
@@ -28,16 +28,20 @@ type Props = {
 const Sidebar = ({ activeWorkspaceId }: Props) => {
   const router = useRouter();
 
-  // data fetching
+  // data fetching for user's workspace
   const { data, isFetched } = useQueryData(
     ['user-workspaces'],
     getAllUserWorkspaces
   );
 
-  console.log('data --', data);
   const { userWorkspaces: workspaces } = data as WorkspaceProps;
 
-  const currentWorkspace = workspaces.workSpace.find(
+  // data fetching for notifications
+  const {data: notifications} = useQueryData(['user-notifications'],getAllUserNotifications);
+
+  const {data:count} = notifications as NotificationProps;
+
+  const currentWorkspace = workspaces?.workSpace.find(
     (ws) => ws.id === activeWorkspaceId
   );
 
@@ -69,7 +73,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
           <SelectGroup>
             <SelectLabel>Workspaces</SelectLabel>
             <Separator className='my-2' />
-            {workspaces.workSpace.map((ws) => (
+            {workspaces?.workSpace.map((ws) => (
               <SelectItem key={ws.id} value={ws.id}>
                 {ws.name}
               </SelectItem>
@@ -108,7 +112,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
           </Modal>
         )}
 
-      <p className='w-full text-[#9D9D9D] font-bold mt-4'>Menu</p>
+      <p className='w-full text-[#9D9D9D] font-medium mt-4'>Menu</p>
       <nav className='w-full'>
         <ul>
           {menuItems.map((it, index) => (
@@ -118,11 +122,15 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
               selected={pathname === it.href}
               title={it.title}
               key={index}
-              notifications={[]} // 3:37:10
+              notifications={(it.title === 'Notifications' && count?._count && count._count.notifications) || 0} // 3:37:10
             />
           ))}
         </ul>
       </nav>
+
+      <Separator className='w-4/5'/>
+
+      <p className='w-full font-medium  text-[#9D9D9D]'>Workspaces</p>
     </div>
   );
 };
