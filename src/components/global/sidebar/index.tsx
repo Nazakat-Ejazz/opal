@@ -20,6 +20,7 @@ import { PlusCircleIcon } from 'lucide-react';
 import Search from '../search';
 import { MENU_ITEMS } from '@/constants';
 import SidebarItems from './SidebarItem';
+import WorkspacePlaceholder from './sidebarItemsIcons/WorkspacePlaceholder';
 
 type Props = {
   activeWorkspaceId: string;
@@ -122,7 +123,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
               selected={pathname === it.href}
               title={it.title}
               key={index}
-              notifications={(it.title === 'Notifications' && count?._count && count._count.notifications) || 0} // 3:37:10
+              notifications={(it.title === 'Notifications' && count?._count && count._count.notifications) || 0} 
             />
           ))}
         </ul>
@@ -131,6 +132,45 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
       <Separator className='w-4/5'/>
 
       <p className='w-full font-medium  text-[#9D9D9D]'>Workspaces</p>
+      <nav className='w-full'>
+        <ul className={`h-[180px] overflow-x-hidden overflow-auto ${workspaces.workSpace.length ? 'fade-layer' : ''}`}>
+          {/* if a user has just personal workspace i.e he is on a free tier we want him/her to upgrade to a premium package */}
+          { workspaces.workSpace.length === 1 && !workspaces.members.length && (
+            <div className='w-full mt-[10px] h-max'>
+              <div className='text-[#414141] font-medium text-sm'>
+                { workspaces.subscription?.plan === 'FREE' ? 'Upgrade to a premium plan for creating new workspaces' : 'No other workspaces found.'}
+              </div>
+            </div>
+          )
+        }
+
+          {/* workspaces of a user other than personal workspaces */}
+            { workspaces?.workSpace?.map((ws, index) => (
+                ws.type !== 'PERSONAL' && (
+                <SidebarItems
+                  key={index}
+                  title={ws.name}
+                  notifications={0}
+                  selected={pathname === `/dashboard/${ws.id}`}
+                  href={`/dashboard/${ws.id}`}
+                  icon={<WorkspacePlaceholder>{ws.name.charAt(0)}</WorkspacePlaceholder>}
+                />
+                )
+            ))}
+
+            {/** workspaces that are shared with the user */}
+            {workspaces?.members.map((mem, index) => (
+                <SidebarItems
+                  key={index}
+                  title={mem.Workspace.name}
+                  notifications={0}
+                  selected={pathname === `/dashboard/${mem.Workspace.id}`}
+                  href={`/dashboard/${mem.Workspace.id}`}
+                  icon={<WorkspacePlaceholder>{mem.Workspace.name.charAt(0)}</WorkspacePlaceholder>}
+                />
+            ))}
+        </ul>
+      </nav>
     </div>
   );
 };
