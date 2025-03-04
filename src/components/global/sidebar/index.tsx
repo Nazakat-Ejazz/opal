@@ -21,6 +21,7 @@ import Search from '../search';
 import { MENU_ITEMS } from '@/constants';
 import SidebarItems from './SidebarItem';
 import WorkspacePlaceholder from './sidebarItemsIcons/WorkspacePlaceholder';
+import GlobalCard from '../global-card';
 
 type Props = {
   activeWorkspaceId: string;
@@ -171,6 +172,10 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
             ))}
         </ul>
       </nav>
+      <Separator className='w-4/5' />
+      {
+        workspaces.subscription?.plan === 'FREE' && <GlobalCard />
+      }
     </div>
   );
 };
