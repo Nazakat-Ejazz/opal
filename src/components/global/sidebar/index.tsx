@@ -22,6 +22,8 @@ import { MENU_ITEMS } from '@/constants';
 import SidebarItems from './SidebarItem';
 import WorkspacePlaceholder from './sidebarItemsIcons/WorkspacePlaceholder';
 import GlobalCard from '../global-card';
+import Loader from '../loader';
+import { Button } from '@/components/ui/button';
 
 type Props = {
   activeWorkspaceId: string;
@@ -39,9 +41,12 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
   const { userWorkspaces: workspaces } = data as WorkspaceProps;
 
   // data fetching for notifications
-  const {data: notifications} = useQueryData(['user-notifications'],getAllUserNotifications);
+  const { data: notifications } = useQueryData(
+    ['user-notifications'],
+    getAllUserNotifications
+  );
 
-  const {data:count} = notifications as NotificationProps;
+  const { data: count } = notifications as NotificationProps;
 
   const currentWorkspace = workspaces?.workSpace.find(
     (ws) => ws.id === activeWorkspaceId
@@ -57,7 +62,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
   const pathname = usePathname();
 
   return (
-    <div className='bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col items-center gap-4 text-white overflow-hidden'>
+    <div className='bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col items-center gap-4 text-white overflow-hidden overflow-y-scroll'>
       <div className='bg-[#111111] p-4 flex gap-2 justify-center items-center mb-4 absolute top-0 left-0 right-0'>
         {/* <!-- brand info --> */}
         <Image src={'/opal-logo.svg'} alt='opal logo' width={40} height={40} />
@@ -124,58 +129,85 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
               selected={pathname === it.href}
               title={it.title}
               key={index}
-              notifications={(it.title === 'Notifications' && count?._count && count._count.notifications) || 0} 
+              notifications={
+                (it.title === 'Notifications' &&
+                  count?._count &&
+                  count._count.notifications) ||
+                0
+              }
             />
           ))}
         </ul>
       </nav>
 
-      <Separator className='w-4/5'/>
+      <Separator className='w-4/5' />
 
       <p className='w-full font-medium  text-[#9D9D9D]'>Workspaces</p>
       <nav className='w-full'>
-        <ul className={`h-[180px] overflow-x-hidden overflow-auto ${workspaces.workSpace.length ? 'fade-layer' : ''}`}>
+        <ul
+          className={`h-[180px] overflow-x-hidden overflow-auto ${
+            workspaces.workSpace.length ? 'fade-layer' : ''
+          }`}
+        >
           {/* if a user has just personal workspace i.e he is on a free tier we want him/her to upgrade to a premium package */}
-          { workspaces.workSpace.length === 1 && !workspaces.members.length && (
+          {workspaces.workSpace.length === 1 && !workspaces.members.length && (
             <div className='w-full mt-[10px] h-max'>
               <div className='text-[#414141] font-medium text-sm'>
-                { workspaces.subscription?.plan === 'FREE' ? 'Upgrade to a premium plan for creating new workspaces' : 'No other workspaces found.'}
+                {workspaces.subscription?.plan === 'FREE'
+                  ? 'Upgrade to a premium plan for creating new workspaces'
+                  : 'No other workspaces found.'}
               </div>
             </div>
-          )
-        }
+          )}
 
           {/* workspaces of a user other than personal workspaces */}
-            { workspaces?.workSpace?.map((ws, index) => (
-                ws.type !== 'PERSONAL' && (
+          {workspaces?.workSpace?.map(
+            (ws, index) =>
+              ws.type !== 'PERSONAL' && (
                 <SidebarItems
                   key={index}
                   title={ws.name}
                   notifications={0}
                   selected={pathname === `/dashboard/${ws.id}`}
                   href={`/dashboard/${ws.id}`}
-                  icon={<WorkspacePlaceholder>{ws.name.charAt(0)}</WorkspacePlaceholder>}
+                  icon={
+                    <WorkspacePlaceholder>
+                      {ws.name.charAt(0)}
+                    </WorkspacePlaceholder>
+                  }
                 />
-                )
-            ))}
+              )
+          )}
 
-            {/** workspaces that are shared with the user */}
-            {workspaces?.members.map((mem, index) => (
-                <SidebarItems
-                  key={index}
-                  title={mem.Workspace.name}
-                  notifications={0}
-                  selected={pathname === `/dashboard/${mem.Workspace.id}`}
-                  href={`/dashboard/${mem.Workspace.id}`}
-                  icon={<WorkspacePlaceholder>{mem.Workspace.name.charAt(0)}</WorkspacePlaceholder>}
-                />
-            ))}
+          {/** workspaces that are shared with the user */}
+          {workspaces?.members.map((mem, index) => (
+            <SidebarItems
+              key={index}
+              title={mem.Workspace.name}
+              notifications={0}
+              selected={pathname === `/dashboard/${mem.Workspace.id}`}
+              href={`/dashboard/${mem.Workspace.id}`}
+              icon={
+                <WorkspacePlaceholder>
+                  {mem.Workspace.name.charAt(0)}
+                </WorkspacePlaceholder>
+              }
+            />
+          ))}
         </ul>
       </nav>
       <Separator className='w-4/5' />
-      {
-        workspaces.subscription?.plan === 'FREE' && <GlobalCard />
-      }
+      {workspaces.subscription?.plan === 'FREE' && (
+        <GlobalCard
+          title='Upgrade to pro'
+          description='Unlock Premium AI Features like trancription, AI Summary and much more...'
+          footer={
+            <Button className='text-sm w-full'>
+              <Loader>Upgrade</Loader>
+            </Button>
+          }
+        />
+      )}
     </div>
   );
 };
